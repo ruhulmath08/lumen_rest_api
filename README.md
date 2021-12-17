@@ -46,17 +46,19 @@ To use some generators command in Lumen (just like you do in Laravel), you need 
     
   Create all the file with a single command **php artisan make:model Post -fmc**
  - Open "database/migrations/create_post_table" and add the following code
-     ```public function up()
-            {
-                Schema::create('posts', function (Blueprint $table) {
-                    $table->id();
-                    $table->string('title');
-                    $table->text('body');
-                    $table->timestamps();
-                });
-            }
+     ```
+        public function up()
+        {
+            Schema::create('posts', function (Blueprint $table) {
+                $table->id();
+                $table->string('title');
+                $table->text('body');
+                $table->timestamps();
+            });
+        }
     ```
  - For migrate database run command **php artisan migrate**
+ 
  - Now add some dummy data inside **posts** table
     * Open **PostFactory.php** class "lumen_rest_api\database\factories\PostFactory.php" and write the following code
       ```
@@ -334,6 +336,57 @@ To use some generators command in Lumen (just like you do in Laravel), you need 
           "message": "Post deleted successfully"
       }
       ```
+
+## passport authentication
+
+- Now we will create our **users** table
+  ```
+  php artisan make:migration create_users_table --create=users
+  ```
+  
+- Now we will create our **AuthController.php** file
+  ```
+  php artisan make:controller AuthController
+  ```
+  
+- Open "database/migrations/2021_12_17_200532_create_users_table.php" and add the following code
+  ```
+  public function up()
+     {
+         Schema::create('users', function (Blueprint $table) {
+             $table->id();
+             $table->string('name');
+             $table->string('email')->unique();
+             $table->string('password');
+             $table->timestamps();
+         });
+     }
+  ```
+- For migrate database(create table in DB) run command **php artisan migrate**
+  
+  ```php artisan migrate```
+  
+- Add faker data for password column in **database/factories/UserFactory.php**
+  ```
+  public function definition()
+  {
+      return [
+          'name' => $this->faker->name,
+          'email' => $this->faker->unique()->safeEmail,
+          'password' => app('hash')->make('123456'),
+      ];
+  }
+  ```
+  
+- Now create five dummy users
+  ```
+  php artisan tinker
+  
+  App\Models\User::factory()->count(5)->create()
+  ```
+
+## We will create
+
 - Start from 
     
-    **Time: 12.24**
+    **Time: 13:48**
